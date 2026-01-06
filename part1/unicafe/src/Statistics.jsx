@@ -1,4 +1,8 @@
 const Statistics = ({ good, neutral, bad }) => {
+  if (good + neutral + bad === 0) {
+    return <p>No feedback given</p>;
+  }
+
   return (
     <div>
       <h1>statistics</h1>
