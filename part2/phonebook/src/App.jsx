@@ -20,14 +20,31 @@ function App() {
   const addPerson = (e) => {
     e.preventDefault();
 
+    const existingPerson = persons.find((person) => person.name === newName);
+
     const personObject = {
       name: newName,
       number: newNumber,
       id: (persons.length + 1).toString(),
     };
 
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (existingPerson) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        personsData
+          .update(existingPerson.id, updatedPerson)
+          .then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== existingPerson.id ? person : response.data
+              )
+            );
+          });
+      }
       setNewName("");
       setNewNumber("");
       return;
