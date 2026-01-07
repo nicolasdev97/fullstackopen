@@ -9,7 +9,7 @@ function App() {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    personsData.getAllPersons().then((response) => {
+    personsData.get().then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -33,11 +33,21 @@ function App() {
       return;
     }
 
-    personsData.createPerson(personObject).then((response) => {
+    personsData.create(personObject).then((response) => {
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
     });
+  };
+
+  const removePerson = (id) => {
+    const person = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personsData.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
   };
 
   const [filter, setFilter] = useState("");
@@ -61,7 +71,7 @@ function App() {
         addPerson={addPerson}
       />
       <h3>Numbers</h3>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} removePerson={removePerson} />
     </div>
   );
 }
