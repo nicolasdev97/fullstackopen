@@ -3,23 +3,13 @@ import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import { useEffect } from "react";
-import axios from "axios";
+import personsData from "../services/personsData";
 
 function App() {
   const [persons, setPersons] = useState([]);
 
-  const baseUrl = "http://localhost:3001/persons";
-
-  const getAllPersons = () => {
-    return axios.get(baseUrl);
-  };
-
-  const createPerson = (newPerson) => {
-    return axios.post(baseUrl, newPerson);
-  };
-
   useEffect(() => {
-    getAllPersons().then((response) => {
+    personsData.getAllPersons().then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -43,7 +33,7 @@ function App() {
       return;
     }
 
-    createPerson(personObject).then((response) => {
+    personsData.createPerson(personObject).then((response) => {
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
