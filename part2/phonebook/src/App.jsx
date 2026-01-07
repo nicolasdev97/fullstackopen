@@ -10,8 +10,16 @@ function App() {
 
   const baseUrl = "http://localhost:3001/persons";
 
+  const getAllPersons = () => {
+    return axios.get(baseUrl);
+  };
+
+  const createPerson = (newPerson) => {
+    return axios.post(baseUrl, newPerson);
+  };
+
   useEffect(() => {
-    axios.get(baseUrl).then((response) => {
+    getAllPersons().then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -22,6 +30,12 @@ function App() {
   const addPerson = (e) => {
     e.preventDefault();
 
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: (persons.length + 1).toString(),
+    };
+
     if (persons.some((person) => person.name === newName)) {
       alert(`${newName} is already added to phonebook`);
       setNewName("");
@@ -29,9 +43,11 @@ function App() {
       return;
     }
 
-    setPersons([...persons, { name: newName, number: newNumber }]);
-    setNewName("");
-    setNewNumber("");
+    createPerson(personObject).then((response) => {
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const [filter, setFilter] = useState("");
