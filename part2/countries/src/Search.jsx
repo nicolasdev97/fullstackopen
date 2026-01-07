@@ -1,9 +1,15 @@
-const Search = ({ filter, setFilter }) => {
+const Search = ({ filter, setFilter, setSelectedCountry }) => {
   return (
     <div>
       <p>
-        find countries:{" "}
-        <input value={filter} onChange={(e) => setFilter(e.target.value)} />
+        Find countries:{" "}
+        <input
+          value={filter}
+          onChange={(e) => {
+            setFilter(e.target.value);
+            setSelectedCountry(null);
+          }}
+        />
       </p>
     </div>
   );

@@ -6,6 +6,7 @@ import Countries from "./Countries";
 function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   // Get all countries data from the API
 
@@ -21,8 +22,21 @@ function App() {
 
   return (
     <>
-      <Search filter={filter} setFilter={setFilter} />
-      <Countries filteredCountries={filteredCountries} />
+      <h1>Country Finder</h1>
+      <Search
+        filter={filter}
+        setFilter={setFilter}
+        setSelectedCountry={setSelectedCountry}
+      />
+      {countries.length === 0 ? (
+        <p>Loading data...</p>
+      ) : (
+        <Countries
+          filteredCountries={filteredCountries}
+          selectedCountry={selectedCountry}
+          setSelectedCountry={setSelectedCountry}
+        />
+      )}
     </>
   );
 }
