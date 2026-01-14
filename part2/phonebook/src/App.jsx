@@ -29,7 +29,6 @@ function App() {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: (persons.length + 1).toString(),
     };
 
     if (existingPerson) {
