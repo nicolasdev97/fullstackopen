@@ -41,26 +41,22 @@ function App() {
         personsData
           .update(existingPerson.id, updatedPerson)
           .then((response) => {
-            setMessage(`Updated ${personObject.name} number`);
+            setMessage(`Updated ${response.data.name}`);
             setMessageError(false);
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
+
             setPersons(
-              persons.map((person) =>
-                person.id !== existingPerson.id ? person : response.data
+              persons.map((p) =>
+                p.id !== existingPerson.id ? p : response.data
               )
             );
+
+            setTimeout(() => setMessage(null), 5000);
           })
-          .catch(() => {
-            setMessage(
-              `Information of ${existingPerson.name} has already been removed from server`
-            );
+          .catch((error) => {
+            setMessage(error.response.data.error);
             setMessageError(true);
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
-            setPersons(persons.filter((p) => p.id !== existingPerson.id));
+
+            setTimeout(() => setMessage(null), 5000);
           });
       }
       setNewName("");
@@ -68,16 +64,23 @@ function App() {
       return;
     }
 
-    personsData.create(personObject).then((response) => {
-      setMessage(`Added ${personObject.name}`);
-      setMessageError(false);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      setPersons(persons.concat(response.data));
-      setNewName("");
-      setNewNumber("");
-    });
+    personsData
+      .create(personObject)
+      .then((response) => {
+        setMessage(`Added ${response.data.name}`);
+        setMessageError(false);
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+
+        setTimeout(() => setMessage(null), 5000);
+      })
+      .catch((error) => {
+        setMessage(error.response.data.error);
+        setMessageError(true);
+
+        setTimeout(() => setMessage(null), 5000);
+      });
   };
 
   const removePerson = (id) => {
